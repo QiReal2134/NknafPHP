@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 
 export default defineConfig({
   plugins: [react()],
@@ -9,11 +10,17 @@ export default defineConfig({
       '/api': { target: 'http://localhost:3000', changeOrigin: true },
       '/uploads': { target: 'http://localhost:3000', changeOrigin: true },
     },
+    open: false,
+    hmr: {
+      overlay: true,
+    },
   },
   build: {
     target: 'es2020',
     cssCodeSplit: true,
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 400,
+    minify: 'esbuild',
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks(id: string) {
@@ -40,6 +47,15 @@ export default defineConfig({
     reportCompressedSize: false,
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'react-helmet-async'],
+    include: ['react', 'react-dom', 'react-router-dom', 'react-helmet-async', 'axios', 'i18next', 'react-i18next'],
+    exclude: ['@uiw/react-md-editor'],
+  },
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
+    },
+  },
+  css: {
+    devSourcemap: false,
   },
 })

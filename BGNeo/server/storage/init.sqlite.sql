@@ -69,10 +69,9 @@ CREATE TABLE articles (
     FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- ============================================================
--- 5. article_categories 文章-分类关联表
--- ============================================================
-CREATE TABLE article_categories (
+-- 为 articles 表添加索引CREATE INDEX idx_articles_status ON articles(status);CREATE INDEX idx_articles_created_at ON articles(created_at);CREATE INDEX idx_articles_published_at ON articles(published_at);CREATE INDEX idx_articles_author_id ON articles(author_id);
+
+-- ============================================================-- 5. article_categories 文章-分类关联表-- ============================================================CREATE TABLE article_categories (
     article_id INTEGER NOT NULL,
     category_id INTEGER NOT NULL,
     PRIMARY KEY (article_id, category_id),
@@ -80,16 +79,17 @@ CREATE TABLE article_categories (
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 );
 
--- ============================================================
--- 6. article_tags 文章-标签关联表
--- ============================================================
-CREATE TABLE article_tags (
+-- 为 article_categories 表添加索引CREATE INDEX idx_article_categories_category_id ON article_categories(category_id);
+
+-- ============================================================-- 6. article_tags 文章-标签关联表-- ============================================================CREATE TABLE article_tags (
     article_id INTEGER NOT NULL,
     tag_id INTEGER NOT NULL,
     PRIMARY KEY (article_id, tag_id),
     FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
+
+-- 为 article_tags 表添加索引CREATE INDEX idx_article_tags_tag_id ON article_tags(tag_id);
 
 -- ============================================================
 -- 7. comments 评论表
@@ -108,6 +108,8 @@ CREATE TABLE comments (
     FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
+
+-- 为 comments 表添加索引CREATE INDEX idx_comments_article_id ON comments(article_id);CREATE INDEX idx_comments_status ON comments(status);CREATE INDEX idx_comments_created_at ON comments(created_at);
 
 -- ============================================================
 -- 8. settings 系统设置表

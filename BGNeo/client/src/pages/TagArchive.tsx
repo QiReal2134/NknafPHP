@@ -19,7 +19,7 @@ export default function TagArchive() {
     setLoading(true);
     Promise.all([
       tagApi.getList().then((r: any) => { const tags = r.data || []; return tags.find((tg: any) => tg.slug === slug) || tags.find((tg: any) => tg.name === slug) || null; }),
-      articleApi.getList({ tagId: slug }).then((r: any) => r.data?.list || [])
+      articleApi.getList({ tagId: slug }).then((r: any) => r.data?.items || [])
     ]).then(([tg, list]) => { setTag(tg); setArticles(list); }).catch(() => {}).finally(() => setLoading(false));
   }, [slug]);
 

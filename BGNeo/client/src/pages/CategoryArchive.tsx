@@ -19,7 +19,7 @@ export default function CategoryArchive() {
     setLoading(true);
     Promise.all([
       categoryApi.getList().then((r: any) => (r.data || []).find((c: any) => c.slug === slug) || null),
-      articleApi.getList({ categoryId: slug }).then((r: any) => r.data?.list || [])
+      articleApi.getList({ categoryId: slug }).then((r: any) => r.data?.items || [])
     ]).then(([cat, list]) => { setCategory(cat); setArticles(list); }).catch(() => {}).finally(() => setLoading(false));
   }, [slug]);
 

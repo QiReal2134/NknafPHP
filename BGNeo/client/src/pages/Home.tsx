@@ -81,8 +81,8 @@ export default function Home() {
       
       try {
         const res: any = await articleApi.getList({ page, limit: pageSize, status: 'published' });
-        setArticles(res.data?.list || []);
-        setTotal(res.data?.total || 0);
+        setArticles(res.data?.items || []);
+        setTotal(res.data?.pagination?.total || 0);
       } catch (err) {
         setError('获取文章列表失败');
         console.error('Error fetching articles:', err);

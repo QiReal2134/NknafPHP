@@ -52,7 +52,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       categoryApi.getTree().then((r: any) => setCategories(r.data || [])),
       tagApi.getList().then((r: any) => setTags(r.data || [])),
       articleApi.getList({ limit: 5, status: 'published' }).then((r: any) => {
-        setRecentArticles((r.data?.list || []).map((a: any) => ({ id: a.id, title: a.title, slug: a.slug })));
+        setRecentArticles((r.data?.items || []).map((a: any) => ({ id: a.id, title: a.title, slug: a.slug })));
       }),
     ]).catch((err) => console.error('[Sidebar] 初始化数据失败:', err));
   }, []);

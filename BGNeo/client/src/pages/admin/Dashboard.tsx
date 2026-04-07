@@ -59,8 +59,8 @@ export default function Dashboard() {
     setLoadingStats(true);
     Promise.all([
       articleApi.getList({ limit: 5 }).then((r: any) => {
-        setRecentArticles(r.data?.list || []);
-        setStats(prev => ({ ...prev, articles: r.data?.total || 0 }));
+        setRecentArticles(r.data?.items || []);
+        setStats(prev => ({ ...prev, articles: r.data?.pagination?.total || 0 }));
       }).catch(() => {}),
       commentApi.getStats().then((r: any) => {
         setStats(p => ({ ...p, comments: r.data?.total || 0, pendingComments: r.data?.pending || 0 }));

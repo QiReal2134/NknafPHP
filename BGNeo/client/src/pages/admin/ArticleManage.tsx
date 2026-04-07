@@ -29,13 +29,13 @@ export default function ArticleManage() {
       params.status = 'published';
     }
     articleApi.getList(params).then((r: any) => {
-      let list = r.data?.list || [];
+      let list = r.data?.items || [];
       if (keyword.trim()) {
         const kw = keyword.toLowerCase();
         list = list.filter((a: any) => a.title?.toLowerCase().includes(kw) || a.slug?.toLowerCase().includes(kw));
         setTotal(list.length);
       } else {
-        setTotal(r.data?.total || 0);
+        setTotal(r.data?.pagination?.total || 0);
       }
       setArticles(list);
     }).catch(() => {}).finally(() => { setLoading(false); setTimeout(() => setMounted(true), 100); });
@@ -47,7 +47,7 @@ export default function ArticleManage() {
       const params: Record<string, any> = { page: 1, limit: pageSize };
       if (keyword.trim()) params.q = keyword.trim();
       articleApi.getList(params).then((r: any) => {
-        let list = r.data?.list || [];
+        let list = r.data?.items || [];
         if (keyword.trim()) {
           const kw = keyword.toLowerCase();
           list = list.filter((a: any) => a.title?.toLowerCase().includes(kw) || a.slug?.toLowerCase().includes(kw));

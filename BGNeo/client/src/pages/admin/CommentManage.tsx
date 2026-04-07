@@ -19,7 +19,7 @@ export default function CommentManage() {
   const fetchComments = useCallback(() => {
     setLoading(true);
     commentApi.getPending()
-      .then((r: any) => setComments(r.data?.list || []))
+      .then((r: any) => setComments(r.data?.items || []))
       .catch(() => addToast(t('common.loadFailed') || '加载失败，请重试', 'error'))
       .finally(() => setLoading(false));
   }, [t, addToast]);

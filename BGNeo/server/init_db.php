@@ -2,6 +2,7 @@
 $pdo = new PDO('sqlite:storage/blog.db');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+// 先执行建表和其他插入操作
 $sql = "
 PRAGMA foreign_keys = ON;
 
@@ -146,13 +147,16 @@ INSERT INTO settings (setting_key, setting_value, description) VALUES
 ('icp_number',       '',                      'ICP备案号'),
 ('analytics_code',   '',                      '统计代码(GA/CNZZ等)'),
 ('profile_avatar',   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABFUlEQVR4nJRRu04EMQx0HDt/QUF5Vx4ddw0V30FBCaKEjkdJCRIV30FBC0KUW50E1/AlYbzOZnfFctJNsqvJyLE9juydvIQQyJEzdTznPKlLrwID/p/ONMbP8zE2/UEVZVLdAqZM0/ny+Agj7WKOXAF1//S1ZBrrQOQISJTS1ebpyNTuWAjqdIYRDM4aVcW2qyCzszcjrmtSSTjOzt9xgMKhrYNqUOcXH5EFXYKvH1ct5/XD0vsJ1pKIJkvQ3B9YVk1D6zFpz1UtDeEW9zbMlgi+xVXjNqxvosVl49wWGqtp+gqh+Pm8mzupMbgX/eUPr786Xkbj0XU+ZdzowidtA48+fPuvbjceATJ8k7C8+aZdILQjfgEAAP//AMlX8gAAAAZJREFUAwB0uTTLLyxx9QAAAABJRU5ErkJggg==', '默认头像');
-
-$adminPassword = password_hash('Admin@2026Secure!', PASSWORD_BCRYPT);
-$pdo->exec("INSERT INTO users (username, password, role) VALUES ('admin', '{$adminPassword}', 'admin')");
 ";
 
 try {
     $pdo->exec($sql);
+    
+    // 单独插入用户，使用 password_hash 生成哈希密码
+    $adminPassword = password_hash('Admin123!', PASSWORD_BCRYPT);
+    $stmt = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+    $stmt->execute(['admin', $adminPassword, 'admin']);
+    
     echo 'SQLite database initialized successfully!' . PHP_EOL;
     
     $count = $pdo->query("SELECT COUNT(*) as cnt FROM categories")->fetch();
@@ -163,6 +167,9 @@ try {
     
     $count = $pdo->query("SELECT COUNT(*) as cnt FROM settings")->fetch();
     echo "Settings: " . $count['cnt'] . PHP_EOL;
+    
+    $count = $pdo->query("SELECT COUNT(*) as cnt FROM users")->fetch();
+    echo "Users: " . $count['cnt'] . PHP_EOL;
 } catch (PDOException $e) {
     echo 'Error: ' . $e->getMessage() . PHP_EOL;
 }

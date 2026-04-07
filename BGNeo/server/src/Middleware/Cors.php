@@ -21,7 +21,7 @@ class Cors
         $allowed = env('ALLOWED_ORIGINS', '');
         $this->allowedOrigins = $allowed
             ? array_filter(array_map('trim', explode(',', $allowed)))
-            : ($this->isProduction ? [] : ['http://localhost:5173']);
+            : [];
         $this->allowCredentials = env('CORS_ALLOW_CREDENTIALS', 'true') === 'true';
         $this->origin = $this->resolveOrigin();
     }
@@ -71,12 +71,6 @@ class Cors
             return in_array($requestOrigin, $this->allowedOrigins, true)
                 ? $requestOrigin
                 : '';
-        }
-
-        if (!empty($this->allowedOrigins)) {
-            return in_array($requestOrigin, $this->allowedOrigins, true)
-                ? $requestOrigin
-                : $this->allowedOrigins[0];
         }
 
         return $requestOrigin;

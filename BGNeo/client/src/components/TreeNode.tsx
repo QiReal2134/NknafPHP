@@ -42,11 +42,11 @@ export default function TreeNode({
   );
 
   const handleClick = useCallback(() => {
-    if (hasChildren && !node.href) {
-      onToggle(node.id);
-    } else {
+    if (node.href) {
       onSelect?.(node);
       onClose?.();
+    } else if (hasChildren) {
+      onToggle(node.id);
     }
   }, [hasChildren, node, onToggle, onSelect, onClose]);
 

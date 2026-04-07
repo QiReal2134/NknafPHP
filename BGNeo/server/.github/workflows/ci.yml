@@ -1,0 +1,117 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: ['8.5']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: pdo, pdo_sqlite, redis, json, mbstring
+          tools: composer:v2
+          coverage: xdebug
+      
+      - name: Validate composer.json
+        run: composer validate
+      
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+      
+      - name: Run static analysis
+        run: |
+          if [ -f vendor/bin/phpstan ]; then
+            vendor/bin/phpstan analyse src --level max
+          fi
+      
+      - name: Run tests
+        run: |
+          if [ -f vendor/bin/phpunit ]; then
+            vendor/bin/phpunit --testdox
+          fi
+      
+      - name: Security check
+        run: |
+          if [ -f security_check.php ]; then
+            php security_check.php || exit 1
+          fi
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: pdo, pdo_sqlite, redis
+      
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --optimize-autoloader --no-dev
+      
+      - name: Create artifact
+        run: |
+          tar -czf release-${{ github.sha }}.tar.gz \
+            --exclude='.git' \
+            --exclude='tests' \
+            --exclude='.github' \
+            --exclude='*.log' \
+            .
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ github.sha }}
+          path: release-${{ github.sha }}.tar.gz
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-${{ github.sha }}
+      
+      - name: Extract release
+        run: tar -xzf release-${{ github.sha }}.tar.gz
+      
+      - name: Deploy to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > deploy_key
+          chmod 600 deploy_key
+          
+          ssh -i deploy_key -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} << 'EOF'
+            cd /var/www/bgneo
+            rm -rf *
+            tar -xzf /tmp/release.tar.gz
+            composer install --no-dev --optimize-autoloader
+            php init_db.php
+            chmod -R 755 storage uploads
+            chmod 644 .env
+          EOF

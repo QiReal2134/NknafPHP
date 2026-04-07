@@ -1,0 +1,16 @@
+/vendor/
+/node_modules/
+/dist/
+/.idea/
+/.vscode/
+*.log
+.env
+uploads/*
+!uploads/.gitkeep
+storage/logs/*
+!storage/logs/.gitkeep
+.DS_Store
+Thumbs.db
+composer.lock
+package-lock.json
+client/dist/

@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*?page=*
+Disallow: /*?q=*
+
+Sitemap: https://qireal.blog/sitemap.xml
+Host: qireal.blog
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1

@@ -1,0 +1,19 @@
+# ============================================================
+# 数据库文件保护 (.htaccess)
+# 放置在 server/storage/.htaccess
+# ============================================================
+
+# 禁止所有访问
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+# 兼容旧版本 Apache
+<IfModule !mod_authz_core.c>
+    Deny from all
+</IfModule>
+
+# 禁止访问所有文件类型
+<FilesMatch ".*">
+    Require all denied
+</FilesMatch>

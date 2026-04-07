@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+use PHPUnit\TextUI\Configuration\Configuration;
+
+$configuration = new Configuration();
+
+return [
+    'source' => [
+        'include' => [
+            'directories' => [
+                __DIR__ . '/../src',
+            ],
+            'exclude' => [
+                __DIR__ . '/../src/vendor',
+            ],
+        ],
+    ],
+    'tests' => [
+        'directories' => [
+            __DIR__,
+        ],
+    ],
+];

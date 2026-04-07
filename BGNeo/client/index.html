@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <title>Nknaf's Blog - 个人技术博客</title>
+    <meta name="description" content="Nknaf 的个人技术博客，专注于前端、后端开发经验分享，涵盖 React、Vue、Node.js、TypeScript 等技术栈" />
+    <meta name="keywords" content="Nknaf, 博客, 前端, 后端, React, Vue, Node.js, TypeScript, 技术分享, 全栈开发" />
+    <meta name="author" content="Nknaf" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-video-preview:-1" />
+    <meta name="generator" content="BGNeo Blog System" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#89B4FA" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BGNeo" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <script>
+      (function() {
+        var THEME_KEY = 'bgneo_theme';
+        var saved = localStorage.getItem(THEME_KEY);
+        var isDark = saved ? (saved === 'midnight' || ['one-dark','tokyo-night','dracula','nord','mocha','gruvbox-dark','palenight','monokai','solarized-dark','ayu-dark','night-owl','synthwave','rose-pine','gotham','mariana','deep-navy','forest','vscode-dark','vscode-modern'].indexOf(saved) > -1) : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (isDark) {
+          document.documentElement.setAttribute('data-mode', 'dark');
+          document.documentElement.style.setProperty('--bg-primary', '#1E1E2E');
+          document.documentElement.style.setProperty('--bg-secondary', '#181825');
+          document.documentElement.style.setProperty('--bg-tertiary', '#282C34');
+          document.documentElement.style.setProperty('--bg-hover', '#3E4451');
+          document.documentElement.style.setProperty('--text-primary', '#ABB2BF');
+          document.documentElement.style.setProperty('--text-secondary', '#9CDCFE');
+          document.documentElement.style.setProperty('--text-muted', '#5C6370');
+          document.documentElement.style.setProperty('--text-link', '#61AFEF');
+          document.documentElement.style.setProperty('--accent-primary', '#007ACC');
+          document.documentElement.style.setProperty('--accent-secondary', '#4EC9B0');
+          document.documentElement.style.setProperty('--accent-success', '#98C379');
+          document.documentElement.style.setProperty('--accent-warning', '#E5C07B');
+          document.documentElement.style.setProperty('--accent-danger', '#E06C75');
+          document.documentElement.style.setProperty('--border-color', '#3E4451');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1E1E2E');
+        }
+      })();
+    </script>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nknaf's Blog - 个人技术博客" />
+    <meta property="og:description" content="专注于前端、后端开发经验分享，涵盖 React、Vue、Node.js、TypeScript 等技术栈" />
+    <meta property="og:site_name" content="Nknaf's Blog" />
+    <meta property="og:locale" content="zh_CN" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Nknaf" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Nknaf's Blog",
+      "url": "/",
+      "description": "个人技术博客，专注前端后端开发经验分享",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="//api.nknaf.blog" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>

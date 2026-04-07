@@ -1,0 +1,92 @@
+# ============================================================
+# BGNeo Blog - 公共目录安全配置
+# 放置在 server/public/.htaccess
+# ============================================================
+
+# 启用重写引擎
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+</IfModule>
+
+# ============================================================
+# 1. 隐藏服务器版本
+# ============================================================
+ServerTokens Prod
+ServerSignature Off
+
+# ============================================================
+# 2. 禁止访问敏感文件
+# ============================================================
+
+# .env 文件
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>
+
+# .git 目录
+<IfModule mod_rewrite.c>
+    RewriteRule (^\.git|\.git/) - [F,L]
+</IfModule>
+
+# 数据库文件
+<FilesMatch "\.(db|sqlite|sqlite3)$">
+    Require all denied
+</FilesMatch>
+
+# 备份文件
+<FilesMatch "\.(bak|backup|old|orig|save)$">
+    Require all denied
+</FilesMatch>
+
+# 配置文件
+<FilesMatch "\.(yml|yaml|ini|conf|cfg)$">
+    Require all denied
+</FilesMatch>
+
+# 日志文件
+<FilesMatch "\.(log)$">
+    Require all denied
+</FilesMatch>
+
+# ============================================================
+# 3. 安全响应头
+# ============================================================
+
+<IfModule mod_headers.c>
+    # 防止点击劫持
+    Header always set X-Frame-Options "DENY"
+    
+    # 防止 MIME 类型嗅探
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # XSS 防护
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer 策略
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # 内容安全策略
+    Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    
+    # 跨域策略
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    Header always set Cross-Origin-Resource-Policy "same-site"
+    
+    # 权限策略
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+</IfModule>
+
+# ============================================================
+# 4. 禁止目录浏览
+# ============================================================
+
+Options -Indexes
+
+# ============================================================
+# 5. 限制 HTTP 方法
+# ============================================================
+
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_METHOD} !^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS)$
+    RewriteRule .* - [F,L]
+</IfModule>

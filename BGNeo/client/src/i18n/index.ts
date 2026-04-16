@@ -4,7 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import zh from './locales/zh.json'
 import en from './locales/en.json'
 
-i18n
+const initPromise = i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
@@ -14,5 +14,7 @@ i18n
     detection: { order: ['localStorage', 'navigator'], caches: ['localStorage'] },
     interpolation: { escapeValue: false }
   })
+
+export const i18nInitPromise = initPromise || Promise.resolve()
 
 export default i18n
